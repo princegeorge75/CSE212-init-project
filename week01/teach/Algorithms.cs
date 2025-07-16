@@ -1,12 +1,15 @@
 ﻿using System.Diagnostics;
 
-public static class Algorithms {
-    public static void Run() {
+public static class Algorithms
+{
+    public static void Run()
+    {
         Console.WriteLine("{0,15}{1,15}{2,15}{3,15}{4,15}{5,15}{6,15}", "n", "alg1-count", "alg2-count", "alg3-count",
             "alg1-time", "alg2-time", "alg3-time");
         Console.WriteLine("{0,15}{0,15}{0,15}{0,15}{0,15}{0,15}{0,15}", "----------");
 
-        for (int n = 0; n < 15001; n += 1000) {
+        for (int n = 0; n < 15001; n += 1000)
+        {
             int count1 = Algorithm1(n);
             int count2 = Algorithm2(n);
             int count3 = Algorithm3(n);
@@ -19,9 +22,11 @@ public static class Algorithms {
         }
     }
 
-    private static double Time(Func<int, int> algorithm, int input, int times) {
+    private static double Time(Func<int, int> algorithm, int input, int times)
+    {
         var sw = Stopwatch.StartNew();
-        for (var i = 0; i < times; ++i) {
+        for (var i = 0; i < times; ++i)
+        {
             algorithm(input);
         }
 
@@ -35,7 +40,8 @@ public static class Algorithms {
     /// done the count is returned.
     /// </summary>
     /// <param name="size">the amount of work to do</param>
-    private static int Algorithm1(int size) {
+    private static int Algorithm1(int size)
+    {
         var count = 0;
         for (var i = 0; i < size; ++i)
             count += 1;
@@ -49,11 +55,12 @@ public static class Algorithms {
     /// done the count is returned.
     /// </summary>
     /// <param name="size">the amount of work to do</param>
-    private static int Algorithm2(int size) {
+    private static int Algorithm2(int size)
+    {
         var count = 0;
         for (var i = 0; i < size; ++i)
-        for (var j = 0; j < size; ++j)
-            count += 1;
+            for (var j = 0; j < size; ++j)
+                count += 1;
 
         return count;
     }
@@ -64,11 +71,13 @@ public static class Algorithms {
     /// done the count is returned.
     /// </summary>
     /// <param name="size">the amount of work to do</param>
-    private static int Algorithm3(int size) {
+    private static int Algorithm3(int size)
+    {
         var count = 0;
         var start = 0;
         var end = size - 1;
-        while (start <= end) {
+        while (start <= end)
+        {
             var middle = (end - start) / 2 + start;
             start = middle + 1;
             count += 1;
@@ -77,3 +86,28 @@ public static class Algorithms {
         return count;
     }
 }
+
+/*
+=======================
+Analysis Answers
+=======================
+
+1. Big O Predictions:
+   - Algorithm 1: O(n)
+   - Algorithm 2: O(n^2)
+   - Algorithm 3: O(log n)
+
+2. Do actual results match your predictions?
+Yes, the iterations counts and timing data match with the expected growth:
+- Algorithm1 shows linear growth.
+- Algorithm2 shows quadratic growth.
+- Algorithm3 shows logarithmic growth.
+
+3. Best and Worst performances?
+- Best: Algorithm3 (O(log n))
+- Worst: Algorithm2 (O(n^2))
+
+4. Why does Big O apply when n is large?
+Because small inputs finish quickly in all algorithms..
+Only with large inputs do you see how inefficient algorithms take much longer.
+*/
