@@ -11,7 +11,11 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
+
     // Defect(s) Found: 
+    // The queue was using LIFO order because Enqueue used Insert(0, person).
+    // This caused the wrong person (e.g., Sue) to appear too early.
+    // Fixed by changing Enqueue to use _queue.Add(person) to maintain FIFO order.
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -43,7 +47,11 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
     // After running 5 times, add George with 3 turns.  Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
+
     // Defect(s) Found: 
+    // Same queue order issue as above — queue behaved like a stack.
+    // Caused incorrect cycling of people when George was added mid-way.
+    // Fixed by using _queue.Add(person) instead of Insert(0, person) in Enqueue().
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -85,7 +93,12 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+
+    // Defect(s) Found:
+    // Incorrect queue order caused Sue to appear before Bob or Tim.
+    // Also confirmed that turns for infinite players (turns = 0) are not decremented.
+    // Queue order fixed by correcting Enqueue to append at end.
+ 
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -116,7 +129,12 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
-    // Defect(s) Found: 
+
+    // Defect(s) Found:
+    // Queue order issue made Sue appear before Tim even though Tim was first.
+    // Infinite turns check also passed once queue order was fixed.
+    // Fixed by ensuring FIFO behavior in PersonQueue.
+
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -143,7 +161,10 @@ public class TakingTurnsQueueTests
     [TestMethod]
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
-    // Defect(s) Found: 
+
+    // Defect(s) Found:
+    // No defects found. Test passed. Exception correctly thrown for empty queue.
+ 
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();
